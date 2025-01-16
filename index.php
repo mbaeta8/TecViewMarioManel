@@ -2,7 +2,7 @@
 <html lang="es" >
 <head>
   <meta charset="UTF-8">
-  <title>Isitec</title>
+  <title>TecView</title>
   <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
   <link rel="stylesheet" href="./css/main.css">
   <link rel="icon" href="./img/logo.ico">
@@ -10,7 +10,7 @@
 <body>
 <div class="cont">
   <div class="form sign-in">
-    <h2>Bienvenido a Isitec  <img src="./img/logo.png" width="50"></h2>
+    <h2>Bienvenido a TecView  <img src="./img/logo.png" width="50"></h2>
     <label>
       <span>Email/Usuario</span>
       <input type="email" placeholder="Email/Usuario"/>
