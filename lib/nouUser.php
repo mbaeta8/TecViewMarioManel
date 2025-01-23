@@ -1,9 +1,7 @@
 <?php
-use PDO;
-use PDOException;
 
 function getDBConnection(){
-    $connString = 'mysql:host=localhost;port=3335;dbname=TecView';
+    $connString = 'mysql:host=localhost;port=3335;dbname=tecview';
     $user = 'root';
     $pass = '';
     $db = null;
@@ -20,12 +18,11 @@ function insertarNuevoUsuario($username, $email, $firstName, $lastName, $passwor
     $db = getDBConnection(); 
 
     if ($db) {
-        $passHash = password_hash($password, PASSWORD_DEFAULT);
-        $activationCode = hash('sha256', $activationCodeValue);        
+        $passHash = password_hash($password, PASSWORD_DEFAULT);       
         $mailHash = filter_var($activationCode, FILTER_SANITIZE_STRING);
         
-        $query = "INSERT INTO users (username, mail, firstName, lastName, passHash, active, lastSignIn, creationDate, activationCode) 
-            VALUES (:username, :email, :firstName, :lastName, :password, :active, :lastSignIn, :creationDate, :activationCode)";
+        $query = "INSERT INTO users (username, mail, userFirstName, userLastName, passHash, activat, lastSignIn, creationDate) 
+            VALUES (:username, :email, :firstName, :lastName, :password, :active, :lastSignIn, :creationDate)";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
@@ -35,7 +32,6 @@ function insertarNuevoUsuario($username, $email, $firstName, $lastName, $passwor
         $stmt->bindParam(':active', $active);
         $stmt->bindParam(':lastSignIn', $lastSignIn);
         $stmt->bindParam(':creationDate', $creationDate);
-        $stmt->bindParam(':activationCode', $activationCode);        
 
         if ($stmt->execute()) {
             return true; 

@@ -1,5 +1,5 @@
 <?php
-require_once './lib/nouUser.php';
+    require_once './lib/nouUser.php';
     
     $error = '';
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -39,22 +39,25 @@ require_once './lib/nouUser.php';
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>TecView</title>
-        <link rel="stylesheet" href="./css/main.css">
+        <link rel="stylesheet" style="text/css" href="./css/main.css">
         <link rel="icon" href="./img/logo.ico">
+        <title>TecView</title>
     </head>
     <body>
     <div class="login-page">
         <div class="form">
+        <form method="POST">
         <h2>TecView  <img src="./img/logo.png" width="40"></h2>
-            <input type="text" placeholder="username" required/>
-            <input type="password" placeholder="password" required/>
-            <input type="text" placeholder="verify password" required/>
-            <input type="text" placeholder="name" required/>
-            <input type="text" placeholder="lastname" required>
-            <input type="text" placeholder="email" required/>
+            <input type="text" id="username" placeholder="username" required/>
+            <input type="password" id="password" placeholder="password" required/>
+            <input type="password" id="password2" placeholder="verify password" required/>
+            <input type="text" id="nombres" placeholder="name" required/>
+            <input type="text" id="apellidos" placeholder="lastname" required>
+            <input type="text" id="email" placeholder="email" required/>
             <button>create</button>
             <p class="message">Already registered? <a href="./index.php">Sign In</a></p>
+            <p class="error"><?=$error?></p> 
+        </form>
         </div>
     </div>
     </body>

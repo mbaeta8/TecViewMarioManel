@@ -1,7 +1,8 @@
 <?php
+
     function getDBConnection()
     {
-        $connString = 'mysql:host=localhost;port=3335;dbname=TecView';
+        $connString = 'mysql:host=localhost;port=3335;dbname=tecview';
         $user = 'root';
         $pass = '';
         $db = null;
@@ -14,11 +15,11 @@
         }
     }
 
-    function verificarUsuariBD($credential, $pass) 
+    function verificarUsuarioDB($credential, $pass) 
     {
         $result = false;
         $conn = getDBConnection();
-        $sql = "SELECT `idUser`, `passHash`, `username` FROM `users` WHERE (`mail`=:credential OR `username`=:credential) AND `active`= 1";
+        $sql = "SELECT `iduser`, `passHash`, `username` FROM `users` WHERE (`mail`=:credential OR `username`=:credential) AND `activat`= 1";
         try 
         {
             $usuaris = $conn->prepare($sql);
@@ -27,7 +28,7 @@
                 $dadesUsuari = $usuaris->fetch(PDO::FETCH_ASSOC);
             
                 if (password_verify($pass, $dadesUsuari['passHash'])) {
-                    $result = ['idUsuari' => $dadesUsuari['idUser'], 'name' => $dadesUsuari['username']];
+                    $result = ['idUsuari' => $dadesUsuari['iduser'], 'name' => $dadesUsuari['username']];
                     return $result;
                 }
                 echo "<p style=\"color:red;\">Error " . "PSSWD and HASH do not match" . "</p>";
