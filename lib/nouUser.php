@@ -1,12 +1,15 @@
 <?php
 
 function getDBConnection(){
-    $connString = 'mysql:host=localhost;port=3335;dbname=tecview';
+    $connString = 'mysql:host=localhost;port=3335;dbname=TecView';
     $user = 'root';
     $pass = '';
     $db = null;
     try{
-        $db = new PDO($connString,$user,$pass,[PDO::ATTR_PERSISTENT => True]);
+        $db = new PDO($connString,$user,$pass,[
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
     }catch(PDOException $e){
         echo "<p style=\"color:red;\">Error " . $e->getMessage() . "</p>";
     }finally{
@@ -14,12 +17,11 @@ function getDBConnection(){
     }
 }
 
-function insertarNuevoUsuario($username, $email, $firstName, $lastName, $password, $active, $lastSignIn, $creationDate, $activationCodeValue, $activationCode) {
+function insertarNuevoUsuario($username, $email, $firstName, $lastName, $password, $active, $lastSignIn, $creationDate, $activationCodeValue){
     $db = getDBConnection(); 
 
     if ($db) {
         $passHash = password_hash($password, PASSWORD_DEFAULT);       
-        $mailHash = filter_var($activationCode, FILTER_SANITIZE_STRING);
         
         $query = "INSERT INTO users (username, mail, userFirstName, userLastName, passHash, activat, lastSignIn, creationDate) 
             VALUES (:username, :email, :firstName, :lastName, :password, :active, :lastSignIn, :creationDate)";
@@ -33,10 +35,18 @@ function insertarNuevoUsuario($username, $email, $firstName, $lastName, $passwor
         $stmt->bindParam(':lastSignIn', $lastSignIn);
         $stmt->bindParam(':creationDate', $creationDate);
 
-        if ($stmt->execute()) {
-            return true; 
+        try {
+            if($stmt->execute()){
+                return true;
+            }
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                echo "Error: El correo o nombre de usuario ua existe.";
+            } else {
+                echo "Error al insertar el usuario: " . $e->getMessage();
+            }
+            return false;
         }
-        return false;
     }
     return false;
 }

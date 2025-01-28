@@ -2,12 +2,15 @@
 
     function getDBConnection()
     {
-        $connString = 'mysql:host=localhost;port=3335;dbname=tecview';
+        $connString = 'mysql:host=localhost;port=3335;dbname=TecView';
         $user = 'root';
         $pass = '';
         $db = null;
         try {
-            $db = new PDO($connString, $user, $pass, [PDO::ATTR_PERSISTENT => true]);
+            $db = new PDO($connString,$user,$pass,[
+                PDO::ATTR_PERSISTENT => true,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ]);
         } catch (PDOException $e) {
             echo "<p style=\"color:red;\">Error " . $e->getMessage() . "</p>";
         } finally {

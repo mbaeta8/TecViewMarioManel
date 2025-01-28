@@ -21,11 +21,10 @@
             $active = 0;
             $lastSignIn = date('Y-m-d H:i:s');
             $creationDate = date('Y-m-d H:i:s');
-            $idUser = 1;
-
             $activationCodeValue = random_int(100000, 999999);
              
             $validacioCorrecta = insertarNuevoUsuario($user, $email, $firstName, $lastName, $pass, $active, $lastSignIn, $creationDate, $activationCodeValue);
+           
             if ($validacioCorrecta) {
                 header('Location: ./index.php');
                 exit();
@@ -48,15 +47,17 @@
         <div class="form">
         <form method="POST">
         <h2>TecView  <img src="./img/logo.png" width="40"></h2>
-            <input type="text" id="username" placeholder="username" required/>
-            <input type="password" id="password" placeholder="password" required/>
-            <input type="password" id="password2" placeholder="verify password" required/>
-            <input type="text" id="nombres" placeholder="name" required/>
-            <input type="text" id="apellidos" placeholder="lastname" required>
-            <input type="text" id="email" placeholder="email" required/>
-            <button>create</button>
+        <?php if ($error): ?>
+            <p style="color: red;"><?php echo $error; ?></p>
+        <?php endif; ?>
+            <input type="text" name="username" placeholder="username" required/>
+            <input type="text" name="email" placeholder="email" required/>
+            <input type="text" name="nombres" placeholder="name"/>
+            <input type="text" name="apellidos" placeholder="lastname">
+            <input type="password" name="password" placeholder="password" required/>
+            <input type="password" name="password2" placeholder="verify password" required/>
+            <button type="submit">create</button>
             <p class="message">Already registered? <a href="./index.php">Sign In</a></p>
-            <p class="error"><?=$error?></p> 
         </form>
         </div>
     </div>
