@@ -20,7 +20,6 @@
 
     function verificarUsuarioDB($credential, $pass) 
     {
-        $result = false;
         $conn = getDBConnection();
         $sql = "SELECT `iduser`, `passHash`, `username` FROM `users` WHERE (`mail`=:credential OR `username`=:credential) AND `activat`= 1";
         try 
@@ -32,13 +31,12 @@
             
                 if (password_verify($pass, $dadesUsuari['passHash'])) {
                     $result = ['idUsuari' => $dadesUsuari['iduser'], 'name' => $dadesUsuari['username']];
-                    return $result;
+                    return true;
                 }
-                echo "<p style=\"color:red;\">Error " . "PSSWD and HASH do not match" . "</p>";
+                //echo "<p style=\"color:red;\">Error " . "PSSWD and HASH do not match" . "</p>";
             }
         } catch (PDOException $e) {
             echo "<p style=\"color:red;\">Error " . $e->getMessage() . "</p>";
-        } finally {
-            return $result;
-        }        
+        }
+        return false;    
     }

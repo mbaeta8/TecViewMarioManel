@@ -18,9 +18,10 @@
             $error = "Las passwords no coinciden";
         } else {
             
-            $active = 0;
+            $active = 1;
             $lastSignIn = date('Y-m-d H:i:s');
             $creationDate = date('Y-m-d H:i:s');
+            $idUser = 1;
             $activationCodeValue = random_int(100000, 999999);
              
             $validacioCorrecta = insertarNuevoUsuario($user, $email, $firstName, $lastName, $pass, $active, $lastSignIn, $creationDate, $activationCodeValue);
@@ -47,9 +48,6 @@
         <div class="form">
         <form method="POST">
         <h2>TecView  <img src="./img/logo.png" width="40"></h2>
-        <?php if ($error): ?>
-            <p style="color: red;"><?php echo $error; ?></p>
-        <?php endif; ?>
             <input type="text" name="username" placeholder="username" required/>
             <input type="text" name="email" placeholder="email" required/>
             <input type="text" name="nombres" placeholder="name"/>
@@ -58,6 +56,9 @@
             <input type="password" name="password2" placeholder="verify password" required/>
             <button type="submit">create</button>
             <p class="message">Already registered? <a href="./index.php">Sign In</a></p>
+            <?php if ($error): ?>
+                <p style="color: red;"><?php echo $error; ?></p>
+            <?php endif; ?>
         </form>
         </div>
     </div>

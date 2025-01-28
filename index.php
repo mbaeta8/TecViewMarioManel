@@ -6,14 +6,16 @@
       $credential = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
       $pass = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
       $login = verificarUsuari($credential, $pass);
-      if ($login !== false) {
+      if ($login) {
           session_start();
           $_SESSION['id'] = $login['idUsuari'];
           $_SESSION['user'] = $login['name'];
           
-          header('Location: ./home.php');
+          header('Location: home.php');
           exit();
-      } else { $error = "Revisa l'email/username i/o la contrasenya";}
+      } else { 
+        $error = "Revisa l'email/username i/o la contrasenya";
+      }
   }
 ?>
 <!DOCTYPE html>
@@ -27,14 +29,15 @@
 <body>
 <div class="login-page">
   <div class="form">
-  <form method="POST">
+  <form method="POST" class="login-form">
     <h2>TecView  <img src="./img/logo.png" width="40"></h2>
-    <form class="login-form">
-      <input type="text" placeholder="username/email" required/>
-      <input type="password" placeholder="password" required/>
-      <button>login</button>
-      <p class="message">Not registered? <a href="./register.php">Create an account</a></p>
-    </form>
+    <input type="text" name="username" placeholder="username/email" required/>
+    <input type="password" name="password" placeholder="password" required/>
+    <button type="submit">Login</button>
+    <p class="message">Not registered? <a href="./register.php">Create an account</a></p>
+    <?php if ($error): ?>
+                <p style="color: red;"><?php echo $error; ?></p>
+    <?php endif; ?>
   <form>
   </div>
 </div>
