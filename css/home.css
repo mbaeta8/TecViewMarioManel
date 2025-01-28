@@ -1,5 +1,27 @@
-body {
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    min-height: 10vh;
+    justify-content: right;
+    align-items: center;
+    margin-right: 2em;
+}
+
+main {
+    display: flex;
     background-image: url("../img/greyGradiant.jpg");
+    min-height: 80vh;
+    justify-content: center;
+    align-items: center;
+}
+
+footer {
+    min-height: 10vh;
 }
 
 h1 {
