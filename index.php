@@ -1,72 +1,42 @@
+﻿<?php
+  require_once './lib/controlUsuari.php';
+  $error = '';
+  
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $credential = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
+      $pass = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
+      $login = verificarUsuari($credential, $pass);
+      if ($login !== false) {
+          session_start();
+          $_SESSION['id'] = $login['idUsuari'];
+          $_SESSION['user'] = $login['name'];
+          
+          header('Location: ./home.php');
+          exit();
+      } else { $error = "Revisa l'email/username i/o la contrasenya";}
+  }
+?>
 <!DOCTYPE html>
-<html lang="es" >
+<html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>Isitec</title>
-  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+  <title>TecView</title>
   <link rel="stylesheet" href="./css/main.css">
   <link rel="icon" href="./img/logo.ico">
 </head>
 <body>
-<div class="cont">
-  <div class="form sign-in">
-    <h2>Bienvenido a Isitec  <img src="./img/logo.png" width="50"></h2>
-    <label>
-      <span>Email/Usuario</span>
-      <input type="email" placeholder="Email/Usuario"/>
-    </label>
-    <label>
-      <span>Contraseña</span>
-      <input type="password" placeholder="Contraseña"/>
-    </label>
-    <p class="forgot-pass">Forgot password?</p>
-    <button type="button" class="submit">Iniciar Sesion</button>
-  </div>
-  <div class="sub-cont">
-    <div class="img">
-      <div class="img__text m--up">
-        <h2>Eres Nuevo?</h2>
-        <p>Registrate y descubre la gran variedad de reviews de hardware de nuestra pagina!</p>
-      </div>
-      <div class="img__text m--in">
-        <h2>Ya tienes una cuenta?</h2>
-        <p>Si ya tienes una cuenta, simplemente inicia sesion. Te hechamos de menos!</p>
-      </div>
-      <div class="img__btn">
-        <span class="m--up">Registrarse</span>
-        <span class="m--in">Iniciar Sesion</span>
-      </div>
-    </div>
-    <div class="form sign-up">
-      <h2>Registro  <img src="./img/logo.png" width="50"></h2>
-      <label>
-        <span>Usuario</span>
-        <input type="text" placeholder="Username"/>
-      </label>
-      <label>
-        <span>Email</span>
-        <input type="email" placeholder="Email"/>
-      </label>
-      <label>
-        <span>Nombre</span>
-        <input type="text" placeholder="Nombre"/>
-      </label>
-      <label>
-        <span>Apellido</span>
-        <input type="text" placeholder="Apellido"/>
-      </label>
-      <label>
-        <span>Contraseña</span>
-        <input type="password" placeholder="Contraseña"/>
-      </label>
-      <label>
-        <span>Verificar Contraseña</span>
-        <input type="password" placeholder="Verificar Contraseña"/>
-      </label>
-      <button type="button" class="submit">Registrarse</button>
-    </div>
+<div class="login-page">
+  <div class="form">
+  <form method="POST">
+    <h2>TecView  <img src="./img/logo.png" width="40"></h2>
+    <form class="login-form">
+      <input type="text" placeholder="username/email" required/>
+      <input type="password" placeholder="password" required/>
+      <button>login</button>
+      <p class="message">Not registered? <a href="./register.php">Create an account</a></p>
+    </form>
+  <form>
   </div>
 </div>
-  <script  src="./css/main.js"></script>
 </body>
 </html>
