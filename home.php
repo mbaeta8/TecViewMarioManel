@@ -6,6 +6,12 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
+if (isset($_POST['logout'])) 
+{
+    header('Location: ./index.php');
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es" >
