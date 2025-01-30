@@ -13,5 +13,3 @@ CREATE TABLE users (
 	lastSignIn DATETIME,
 	activat TINYINT(1)
 );
-
-INSERT INTO users (mail,username,passHash,userFirstName,userLastName,creationDate,activat) VALUES ("user1234@gmail.com","user1234","1234","Paco","Franchesco",CURDATE(),1);

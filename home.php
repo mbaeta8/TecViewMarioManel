@@ -1,29 +1,11 @@
 <?php
 session_start();
-use PDO;
-use PDOException;
 
-if (isset($_POST['logout'])) {
-    header('Location: index.php');
+if (!isset($_SESSION['user'])) {
+    header("Location: index.php");
     exit();
 }
 
-    function getDBConnection()
-    {
-        $connString = 'mysql:host=localhost;port=3335;dbname=TecView';
-        $user = 'root';
-        $pass = '';
-        $db = null;
-        try {
-            $db = new PDO($connString, $user, $pass, [PDO::ATTR_PERSISTENT => true]);
-        } catch (PDOException $e) {
-            echo "<p style=\"color:red;\">Error " . $e->getMessage() . "</p>";
-        } finally {
-            return $db;
-        }
-
-
-    }
 ?>
 <!DOCTYPE html>
 <html lang="es" >
@@ -41,8 +23,7 @@ if (isset($_POST['logout'])) {
             </form>
         </header>
         <main>
-
-            <h1>BIENVENIDO</h1><h1 <?php echo $_SESSION['username']?>></h1>
+            <h1>BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
         </main>
         <footer>
 
