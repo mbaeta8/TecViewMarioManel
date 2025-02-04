@@ -11,5 +11,9 @@ CREATE TABLE users (
 	creationDate DATETIME,
 	removeDate DATETIME,
 	lastSignIn DATETIME,
-	activat TINYINT(1)
+	activat TINYINT(1),
+    activationDate DATETIME,
+    activationCode CHAR(64),
+    resetPassExpiry DATETIME,
+    resetPassCode CHAR(64)
 );

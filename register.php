@@ -18,7 +18,7 @@
             $error = "Las passwords no coinciden";
         } else {
             
-            $active = 1;
+            $active = 0;
             $lastSignIn = date('Y-m-d H:i:s');
             $creationDate = date('Y-m-d H:i:s');
             $idUser = 1;
