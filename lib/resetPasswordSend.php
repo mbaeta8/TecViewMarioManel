@@ -2,8 +2,8 @@
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
 
-    require './controlDB.php';
-    require 'vendor/autoload.php';
+    require_once './controlDB.php';
+    //require 'vendor/autoload.php';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
@@ -29,12 +29,12 @@
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'email@gmail.com';
-            $mail->Password = 'Pass';
+            $mail->Username = 'mario.baetam@educem.net';
+            $mail->Password = 'vqdb nrrt vdrj cdqv';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
     
-            $mail->setFrom('no-reply@gmail.com', 'TecView');
+            $mail->setFrom('mario.baetam@educem.net', 'TecView');
             $mail->addAddress($email);
     
             $mail->isHTML(true);

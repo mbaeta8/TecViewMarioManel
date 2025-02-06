@@ -24,6 +24,7 @@
   <title>TecView</title>
   <link rel="stylesheet" href="./css/main.css">
   <link rel="icon" href="./img/logo.ico">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <div class="login-page">
@@ -32,39 +33,51 @@
     <h2>TecView  <img src="./img/logo.png" width="40"></h2>
     <input type="text" name="username" placeholder="username/email" required/>
     <input type="password" name="password" placeholder="password" required/>
-    <p class="message">You forget your Password? <a href="#" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">Reset your Password</a></p>
+    <p class="message">You forget your Password? <a href="#" id="openModal">Reset your Password</a></p>
     <button type="submit">Login</button>
     <p class="message">Not registered? <a href="./register.php">Create an account</a></p>
     <?php if ($error): ?>
                 <p style="color: red;"><?php echo $error; ?></p>
     <?php endif; ?>
-  <form>
-  </div>
+    </form>
 </div>
-
-<!-- Modal de recuperación de contraseña -->
-<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="resetPasswordModalLabel">Recuperar Contraseña</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="resetPasswordSend.php" method="POST">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+    <script>
+        document.getElementById('openModal').addEventListener('click', function(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Recuperar Contraseña',
+                input: 'email',
+                inputLabel: 'Correo Electrónico',
+                inputPlaceholder: 'Ingrese su email',
+                showCancelButton: true,
+                confirmButtonText: 'Enviar',
+                cancelButtonText: 'Cancelar',
+                preConfirm: (email) => {
+                    if (!email) {
+                        Swal.showValidationMessage('Por favor, ingrese un correo válido');
+                        return false;
+                    }
+                    return fetch('./lib/resetPasswordSend.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `email=${encodeURIComponent(email)}`
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        if (result.trim() === "success") {
+                            Swal.fire('Correo enviado', 'Revisa tu bandeja de entrada', 'success');
+                        } else {
+                            Swal.fire('Error', 'Hubo un problema al enviar el correo', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
