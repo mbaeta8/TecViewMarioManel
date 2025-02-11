@@ -1,6 +1,7 @@
 <?php
     require_once './lib/nouUser.php';
-    
+    require './lib/emailActivacion.php';
+
     $error = '';
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
@@ -21,12 +22,16 @@
             $active = 0;
             $lastSignIn = date('Y-m-d H:i:s');
             $creationDate = date('Y-m-d H:i:s');
-            $idUser = 1;
-            $activationCodeValue = random_int(100000, 999999);
+
+            $randomValue = bin2hex(random_bytes(32));
+            $activationCodeValue = hash('sha256', $randomValue);
              
             $validacioCorrecta = insertarNuevoUsuario($user, $email, $firstName, $lastName, $pass, $active, $lastSignIn, $creationDate, $activationCodeValue);
            
             if ($validacioCorrecta) {
+                $activationLink = "localhost/IsitecMarioManel/mailCheckAccount.php?code=" . urlencode($activationCodeValue) . "&mail=" . urlencode($email);
+                enviarCorreoActivacion($email, $user, $activationLink);
+
                 header('Location: ./index.php');
                 exit();
             } else {
