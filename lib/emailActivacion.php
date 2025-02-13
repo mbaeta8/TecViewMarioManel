@@ -2,7 +2,7 @@
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
     
-    require '../vendor/autoload.php';     
+    require __DIR__ . '/../vendor/autoload.php';
 
     function enviarCorreoActivacion($email, $username, $activationLink)
     {
@@ -29,7 +29,7 @@
                 <img src='$logoUrl' alt='TecView Logo' style='width: 150px; margin-bottom: 20px;'>
                 <h1 style='color: #007bff;'>Bienvenido a TecView, $username</h1>
                 <p style='font-size: 16px; color: #333;'> 
-                    Hemos recibido una solicitud para activar tu contraseña.  
+                    Hemos recibido una solicitud para activar tu cuenta.  
                     Haz clic en el botón de abajo para continuar:
                 </p>
                 <a href='$activationLink' 
@@ -38,7 +38,7 @@
                         font-size: 18px; border-radius: 5px;'>
                     Activa tu cuenta ahora! $username
                 </a>
-                <p style='font-size: 14px; color: #666;'>Si no solicitaste este cambio, ignora este correo.</p>
+                <p style='font-size: 14px; color: #666;'>Activa tu cuenta ahora y unete a la familia de TecView</p>
             </div>";
 
             $mail->send();
