@@ -1,5 +1,4 @@
 <?php
-    echo getcwd();
     require_once './lib/controlDB.php';
 
     $conn = getDBConnection();
@@ -16,16 +15,28 @@
 
         if ($stmt->fetch()) {
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $newPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                
-                $stmt = $conn->prepare("UPDATE users SET passHash = :newPassword, resetPassCode = NULL, resetPassExpiry = NULL WHERE mail = :email");
-                $stmt->bindValue(":newPassword", $newPassword, PDO::PARAM_STR);
-                $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+                $newPassword = $_POST['password'];
+                $confirmPassword = $_POST['confirm_password'];
 
-                if ($stmt->execute()) {
-                    echo "<script>alert('Contraseña actualizada correctamente.'); window.location.href='index.php';</script>";
+                $regex = "/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\d!@#$%^&*(),.?\":{}|<>]{8,}$/";
+
+                if (!preg_match($regex, $newPassword)) {
+                    echo "<script>alert('La contraseña debe tener al menos 8 caracteres, una mayuscula, un numero y un caracter especial.');</script>";
+                } elseif ($newPassword !== $confirmPassword) {
+                    echo "<script>alert('Las contraseñas no coinciden.');</script>";
                 } else {
-                    echo "<script>alert('Error al actualizar la contraseña.'); window.location.href='index.php';</script>";
+
+                    $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+                
+                    $stmt = $conn->prepare("UPDATE users SET passHash = :newPassword, resetPassCode = NULL, resetPassExpiry = NULL WHERE mail = :email");
+                    $stmt->bindValue(":newPassword", $newPasswordHash, PDO::PARAM_STR);
+                    $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+
+                    if ($stmt->execute()) {
+                        echo "<script>alert('Contraseña actualizada correctamente.'); window.location.href='index.php';</script>";
+                    } else {
+                        echo "<script>alert('Error al actualizar la contraseña.'); window.location.href='index.php';</script>";
+                    }
                 }
             }
         } else {

@@ -22,7 +22,7 @@ function insertarNuevoUsuario($username, $email, $firstName, $lastName, $passwor
 
     if ($db) {
         $passHash = password_hash($password, PASSWORD_DEFAULT);       
-        $activationCode = hash('sha256', $activationCodeValue);
+        $activationCode = $activationCodeValue;
         $mailHash = isset($_POST['activationCode']) ? filter_input(INPUT_POST, 'activationCode', FILTER_SANITIZE_STRING) : '';
 
         $query = "INSERT INTO users (username, mail, userFirstName, userLastName, passHash, activat, lastSignIn, creationDate, activationCode) 

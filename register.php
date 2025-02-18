@@ -6,14 +6,14 @@
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
         $email = isset($_POST['email']) ? filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL) : '';
-        $firstName = isset($_POST['nombres']) ? filter_input(INPUT_POST, 'nombres', FILTER_SANITIZE_EMAIL) : '';
-        $lastName = isset($_POST['apellidos']) ? filter_input(INPUT_POST, 'apellidos', FILTER_SANITIZE_EMAIL) : '';
+        $firstName = isset($_POST['nombres']) ? filter_input(INPUT_POST, 'nombres', FILTER_SANITIZE_STRING) : '';
+        $lastName = isset($_POST['apellidos']) ? filter_input(INPUT_POST, 'apellidos', FILTER_SANITIZE_STRING) : '';
         $pass = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
         $pass2 = isset($_POST['password2']) ? filter_input(INPUT_POST, 'password2', FILTER_SANITIZE_STRING) : '';        
         
-
-
-        if (empty($user) || empty($email) || empty($pass)) {
+        if (!preg_match('/^(?=.*[A-Z])(?=.*[\W_]).{8,}$/', $pass)) {
+            $error = "La contraseña debe tener al menos 8 caracteres, una mayuscula y un caracter especial.";
+        } else if (empty($user) || empty($email) || empty($pass)) {
             $error = "El nombre de usuario, el correo electronico y la password son obligatorios";
         } elseif ($pass !== $pass2) {
             $error = "Las passwords no coinciden";
@@ -29,10 +29,10 @@
             $validacioCorrecta = insertarNuevoUsuario($user, $email, $firstName, $lastName, $pass, $active, $lastSignIn, $creationDate, $activationCodeValue);
            
             if ($validacioCorrecta) {
-                $activationLink = "localhost/IsitecMarioManel/mailCheckAccount.php?code=" . urlencode($activationCodeValue) . "&mail=" . urlencode($email);
+                $activationLink = "localhost/IsitecMarioManel/lib/mailCheckAccount.php?code=" . urlencode($activationCodeValue) . "&mail=" . urlencode($email);
                 enviarCorreoActivacion($email, $user, $activationLink);
 
-                header('Location: ./index.php');
+                header('Location: ./index.php?success=1');
                 exit();
             } else {
                 $error = "Error al insertar el usuario en la base de datos";

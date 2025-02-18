@@ -1,21 +1,25 @@
 ﻿<?php
-  require_once './lib/controlUsuari.php';
-  $error = '';
+    require_once './lib/controlUsuari.php';
+    $error = '';
+    $successMessage = '';
   
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $credential = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
-      $pass = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
-      $login = verificarUsuari($credential, $pass);
-      if ($login) {
-          session_start();
-          $_SESSION['user'] = $credential;
-          
-          header('Location: home.php');
-          exit();
-      } else { 
-        $error = "Revisa l'email/username i/o la contrasenya";
-      }
-  }
+    if (isset($_GET['success']) && $_GET['success'] == 1) {
+        $successMessage = "Se ha enviado un correo de activación a tu correo. Por favor, revisa tu bandeja de entrada.";
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $credential = isset($_POST['username']) ? filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING) : '';
+        $pass = isset($_POST['password']) ? filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING) : '';
+        $login = verificarUsuari($credential, $pass);
+        if ($login) {
+            session_start();
+            $_SESSION['user'] = $credential;
+            header('Location: home.php');
+            exit();
+        } else { 
+            $error = "Revisa l'email/username i/o la contrasenya";
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en" >
@@ -27,6 +31,9 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+<?php if ($successMessage): ?>
+    <div class="notification" id="notification"><?php echo $successMessage; ?></div>
+<?php endif; ?> 
 <div class="login-page">
   <div class="form">
   <form method="POST" class="login-form">
@@ -79,5 +86,14 @@
             });
         });
     </script>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let notification = document.getElementById("notification");
+        setTimeout(() => {
+            notification.style.display = "none";
+        }, 5000);
+    });
+</script>
 </body>
 </html>
