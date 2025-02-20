@@ -1,6 +1,8 @@
 CREATE DATABASE TecView;
 USE TecView;
 
+DROP DATABASE TecView;
+
 CREATE TABLE users (
 	iduser INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	mail VARCHAR(40) NOT NULL UNIQUE,
@@ -15,5 +17,6 @@ CREATE TABLE users (
     activationDate DATETIME,
     activationCode CHAR(64),
     resetPassExpiry DATETIME,
-    resetPassCode CHAR(64)
+    resetPassCode CHAR(64),
+    foto_perfil LONGTEXT
 );

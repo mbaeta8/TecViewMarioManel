@@ -1,29 +1,102 @@
-*
-{
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #8FBC8F;
+    text-align: center;
 }
 
 header {
     display: flex;
-    min-height: 10vh;
-    justify-content: right;
+    justify-content: space-between;
     align-items: center;
-    margin-right: 2em;
+    background-color: #8FBC8F;
+    padding: 15px 20px;
+    border-bottom: 2px solid black;
 }
 
-main {
-    display: flex;
-    background-image: url("../img/greyGradiant.jpg");
-    min-height: 80vh;
-    justify-content: center;
-    align-items: center;
-}
-
-footer {
-    min-height: 10vh;
+.logo img {
+    width: 50px;
 }
 
 h1 {
+    flex-grow: 1;
+    margin: 0;
+    color: white;
+}
+
+/* ?? Contenedor de usuario (hace que todo sea clickeable) */
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer; /* Hace que toda la zona sea clickeable */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.user-menu span {
+    color: white;
+    font-weight: bold;
+}
+
+.profile-icon img {
+    width: 40px;
+    height: 40px; /* Asegura que sea un círculo perfecto */
+    border-radius: 50%;
+    object-fit: cover; /* Evita deformaciones */
+    cursor: pointer;
+    border: 2px solid white; /* Opcional: para destacar la imagen */
+}
+
+/* ?? Estilos del menú desplegable */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #6b9b6b;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    min-width: 120px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    display: block;
+    text-decoration: none;
+    color: white;
+    padding: 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+}
+
+.dropdown-menu button:hover,
+.dropdown-menu a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+footer {
+    background-color: #8FBC8F;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-top: 2px solid black;
     color: white;
 }
