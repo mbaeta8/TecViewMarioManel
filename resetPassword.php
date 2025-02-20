@@ -8,22 +8,27 @@
         $code = $_GET['code'];
         $email = $_GET['mail'];
 
-        $stmt = $conn->prepare("SELECT resetPassExpiry FROM users WHERE mail = :email AND resetPassCode = :code AND resetPassExpiry > NOW()");
+        $stmt = $conn->prepare("SELECT passHash FROM users WHERE mail = :email AND resetPassCode = :code AND resetPassExpiry > NOW()");
         $stmt->bindValue(":email", $email, PDO::PARAM_STR);
         $stmt->bindValue(":code", $code, PDO::PARAM_STR);
         $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
 
-        if ($stmt->fetch()) {
+        if($user) {
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $newPassword = $_POST['password'];
                 $confirmPassword = $_POST['confirm_password'];
+                $currentPasswordHash = $user['passHash'];
 
-                $regex = "/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\d!@#$%^&*(),.?\":{}|<>]{8,}$/";
+                $regex = "/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/";
 
                 if (!preg_match($regex, $newPassword)) {
                     echo "<script>alert('La contraseña debe tener al menos 8 caracteres, una mayuscula, un numero y un caracter especial.');</script>";
                 } elseif ($newPassword !== $confirmPassword) {
                     echo "<script>alert('Las contraseñas no coinciden.');</script>";
+                } elseif (password_verify($newPassword, $currentPasswordHash)) {
+                    echo "<script>alert('No puedes usar la misma contraseña anterior. Elige una diferente.');</script>";
                 } else {
 
                     $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);

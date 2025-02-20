@@ -23,7 +23,7 @@
             
             $mail->isHTML(true);
             $mail->Subject = 'Activa tu cuenta en TecView!';
-            $logoUrl = 'img/logo.png';
+            $logoUrl = 'https://i.ibb.co/r2LC62Sx/logo.png';
 
             $mail->Body = "<div style='text-align: center; font-family: Arial, sans-serif;'>
                 <img src='$logoUrl' alt='TecView Logo' style='width: 150px; margin-bottom: 20px;'>

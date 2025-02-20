@@ -75,8 +75,12 @@
                     .then(result => {
                         if (result.trim() === "success") {
                             Swal.fire('Correo enviado', 'Revisa tu bandeja de entrada', 'success');
-                        } else {
+                        } else if (result.trim() === "email_not_found") {
+                            Swal.fire('Error', 'El correo no se encuentra registrado', 'error');
+                        } else if (result.trim() === "error_envio") {
                             Swal.fire('Error', 'Hubo un problema al enviar el correo', 'error');
+                        } else {
+                            Swal.fire('Error', 'Hubo un problema desconocido', 'error');
                         }
                     })
                     .catch(error => {

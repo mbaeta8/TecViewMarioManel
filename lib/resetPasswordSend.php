@@ -9,7 +9,19 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
-        $email = $_POST['email'];
+        $email = trim($_POST['email']);
+
+        $stmt = $conn->prepare("SELECT iduser FROM users WHERE mail = :email");
+        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if (!$user){
+            echo "email_not_found";
+            exit();
+        }
+
         $resetPassCode = hash('sha256', random_bytes(32));
         $expiry = date('Y-m-d H:i:s', strtotime('+30 minutes'));
 
@@ -19,12 +31,15 @@
         $stmt->bindValue(":email", $email, PDO::PARAM_STR);
         
         if ($stmt->execute()) {
-            enviarCorreoReset($email, $resetPassCode);
-            echo "Se ha enviado un correo con instrucciones para restablecer tu contraseña.";
-        } else {
-            echo "Error al generar el enlace de recuperación.";
+            if (enviarCorreoReset($email, $resetPassCode)) {
+                echo "success";
+            } else {
+                echo "error_envio";
+            }
+        }else {
+            echo "error_sql";
         }
-        $stmt->closeCursor();
+        exit();
     }
 
     function enviarCorreoReset($email, $resetPassCode) {
@@ -43,7 +58,7 @@
     
             $mail->isHTML(true);
             $mail->Subject = 'Recupera tu contraseña - TecView';
-            $logoUrl = '../img/logo.png';
+            $logoUrl = 'https://i.ibb.co/r2LC62Sx/logo.png';
 
             $resetUrl = "localhost/IsitecMarioManel/resetPassword.php?code=" . urlencode($resetPassCode) . "&mail=" . urlencode($email);
             $mail->Body = "<div style='text-align: center; font-family: Arial, sans-serif;'>
@@ -63,7 +78,9 @@
             </div>";
 
             $mail->send();
+            return true;
         } catch (Exception $e) {
             echo "? Error al enviar correo: {$mail->ErrorInfo}";
+            return false;
         }
     }
