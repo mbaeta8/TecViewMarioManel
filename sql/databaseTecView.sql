@@ -18,5 +18,19 @@ CREATE TABLE users (
     activationCode CHAR(64),
     resetPassExpiry DATETIME,
     resetPassCode CHAR(64),
-    foto_perfil LONGTEXT
+    foto_perfil LONGTEXT NULL,
+    banner LONGTEXT NULL,
+    descripcion TEXT,
+	edad INT,
+    ubicacion VARCHAR(100) NULL
+);
+
+CREATE TABLE posts (
+	idPost INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    userID INT NOT NULL,
+    content TEXT NOT NULL,
+    image LONGTEXT NULL,
+    createdAT DATETIME DEFAULT CURRENT_TIMESTAMP,
+    likes INT DEFAULT 0,
+    FOREIGN KEY (userID) REFERENCES users(iduser) ON DELETE CASCADE
 );
