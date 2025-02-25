@@ -10,19 +10,38 @@ if (!isset($_SESSION['user'])) {
 $conn = getDBConnection();
 $user = $_SESSION['user'];
 
-if (!isset($_SESSION['foto_perfil'])) {    
-    $query = "SELECT foto_perfil FROM users WHERE username = :user";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':user', $user);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+$foto_perfil = 'img/default_profile.jpg';
 
-    if ($row && !empty($row['foto_perfil'])) {
-        $_SESSION['foto_perfil'] = 'data:image/png;base64,' . $row['foto_perfil'];
+  
+$query = "SELECT foto_perfil FROM users WHERE username = :user";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':user', $user);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($row && !empty($row['foto_perfil'])) {
+    $imagen = $row['foto_perfil'];
+    
+    if (strpos($imagen, 'data:image') === 0) {
+        $foto_perfil = $imagen;
     } else {
-        $_SESSION['foto_perfil'] = 'img/default_profile.jpg';
+        $tipo = detectarFormatoBase64($imagen);
+        $foto_perfil = "data:$tipo;base64,$imagen";
     }
+} else {
+    echo "<pre>No se encontró imagen base64 en la base de datos</pre>";
 }
+
+function detectarFormatoBase64($base64) {
+    $inicio = substr($base64, 0, 4); 
+    
+    if ($inicio === '/9j/') return 'image/jpeg'; 
+    if ($inicio === 'iVBOR') return 'image/png'; 
+    if ($inicio === 'R0lG') return 'image/gif'; 
+    
+    return 'image/jpeg'; 
+}
+
 
 if (isset($_POST['logout'])) 
 {
@@ -50,7 +69,7 @@ if (isset($_POST['logout']))
             <div class="user-menu" id="userMenu">
                 <span><?php echo htmlspecialchars($_SESSION['user']); ?></span>
                 <div class="profile-icon">
-                <img id="profileImage" src="<?php echo $_SESSION['foto_perfil']; ?>" alt="Perfil">
+                    <img id="profileImage" src="<?php echo htmlspecialchars($foto_perfil); ?>" alt="Perfil" width="45" height="45">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="perfil.php">Perfil</a>
