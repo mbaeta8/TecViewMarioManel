@@ -69,16 +69,13 @@ if (isset($_POST['logout']))
             <p>© 2021 TecView. Todos los derechos reservados.</p>
         </footer>
         <script>
-            // Función para mostrar/ocultar el menú
             function toggleMenu(event) {
-                event.stopPropagation(); // Evita que el clic se propague y cierre el menú inmediatamente
+                event.stopPropagation(); 
                 document.getElementById("dropdownMenu").classList.toggle("show");
             }
 
-            // Evento de clic en el contenedor de usuario
             document.getElementById("userMenu").addEventListener("click", toggleMenu);
 
-            // Cierra el menú si se hace clic fuera de él
             window.addEventListener("click", function(event) {
                 let dropdown = document.getElementById("dropdownMenu");
                 let userMenu = document.getElementById("userMenu");
