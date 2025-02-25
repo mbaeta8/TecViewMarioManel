@@ -18,10 +18,8 @@ if (!isset($_SESSION['foto_perfil'])) {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($row && !empty($row['foto_perfil'])) {
-        // Si hay una foto de perfil en la base de datos (ya esta en Base64), la usamos
         $_SESSION['foto_perfil'] = 'data:image/png;base64,' . $row['foto_perfil'];
     } else {
-        // Si no hay foto, asignamos la imagen por defecto
         $_SESSION['foto_perfil'] = 'img/default_profile.jpg';
     }
 }
@@ -52,7 +50,7 @@ if (isset($_POST['logout']))
             <div class="user-menu" id="userMenu">
                 <span><?php echo htmlspecialchars($_SESSION['user']); ?></span>
                 <div class="profile-icon">
-                    <img id="profileImage" src="<?php echo isset($_SESSION['foto_perfil']) && !empty($_SESSION['foto_perfil']) ? 'data:image/png;base64,' . $_SESSION['foto_perfil'] : 'img/default-profile.png'; ?>" alt="Perfil">               
+                <img id="profileImage" src="<?php echo $_SESSION['foto_perfil']; ?>" alt="Perfil">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="perfil.php">Perfil</a>
@@ -63,7 +61,7 @@ if (isset($_POST['logout']))
             </div>
         </header>
         <main>
-            <h1>BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
+            <h1 class="welcome-message">BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
         </main>
         <footer>
             <p>© 2021 TecView. Todos los derechos reservados.</p>
