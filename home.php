@@ -42,7 +42,6 @@ function detectarFormatoBase64($base64) {
     return 'image/jpeg'; 
 }
 
-
 if (isset($_POST['logout'])) 
 {
     session_destroy();
@@ -57,6 +56,8 @@ if (isset($_POST['logout']))
     <meta charset="UTF-8">
         <title>TecView</title>
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+        <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>
+        <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
         <link rel='stylesheet' href='css/home.css'>
         <link rel="icon" href="./img/logo.ico">
     </head>
@@ -69,7 +70,7 @@ if (isset($_POST['logout']))
             <div class="user-menu" id="userMenu">
                 <span><?php echo htmlspecialchars($_SESSION['user']); ?></span>
                 <div class="profile-icon">
-                    <img id="profileImage" src="<?php echo htmlspecialchars($foto_perfil); ?>" alt="Perfil" width="45" height="45">
+                    <img id="profileImage" src="<?php echo htmlspecialchars($foto_perfil); ?>" class="rounded-circle" alt="Perfil" width="45" height="45">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="perfil.php">Perfil</a>
