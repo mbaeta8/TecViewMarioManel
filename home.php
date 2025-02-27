@@ -80,7 +80,7 @@ if (isset($_POST['logout']))
             </div>
         </header>
         <main>
-            <h1 class="welcome-message">BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
+        <h1 class="welcome-message">BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
         </main>
         <footer>
             <p>© 2021 TecView. Todos los derechos reservados.</p>
