@@ -63,7 +63,7 @@ if (isset($_POST['logout']))
     </head>
     <body>
         <header>
-            <div class="logo">
+            <div class="logo" id="togglePanel">
                 <img src="img/logo.png" alt="Logo">
             </div>
             <h1>Inicio</h1>
@@ -80,6 +80,25 @@ if (isset($_POST['logout']))
                 </div>
             </div>
         </header>
+        <aside id="sidePanel" class="side-panel">
+            <h3>Opciones</h3>
+
+        <!-- Switch de modo oscuro con el diseño de CodePen -->
+        <div class="dark-mode-container">
+            <label class="theme-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <div class="slider round"></div>
+            </label>
+            <span>Modo Oscuro</span>
+        </div>
+
+        <h3>Filtrar publicaciones</h3>
+        <select id="filterPosts">
+            <option value="recientes">Recientes</option>
+            <option value="populares">Populares</option>
+            <option value="amigos">Amigos</option>
+        </select>
+        </aside>
         <main>
         <h1 class="welcome-message">BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
         </main>
@@ -103,5 +122,6 @@ if (isset($_POST['logout']))
                 }
             });
         </script>
+        <script src="./js/home.js"></script>
     </body>
 </html>
