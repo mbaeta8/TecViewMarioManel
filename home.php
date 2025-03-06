@@ -10,20 +10,36 @@ if (!isset($_SESSION['user'])) {
 $conn = getDBConnection();
 $user = $_SESSION['user'];
 
-if (!isset($_SESSION['foto_perfil'])) {    
-    $query = "SELECT foto_perfil FROM users WHERE username = :user";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':user', $user);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+$foto_perfil = 'img/default_profile.jpg';
 
-    if ($row && !empty($row['foto_perfil'])) {
-        // Si hay una foto de perfil en la base de datos (ya esta en Base64), la usamos
-        $_SESSION['foto_perfil'] = 'data:image/png;base64,' . $row['foto_perfil'];
+  
+$query = "SELECT foto_perfil FROM users WHERE username = :user";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':user', $user);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($row && !empty($row['foto_perfil'])) {
+    $imagen = $row['foto_perfil'];
+    
+    if (strpos($imagen, 'data:image') === 0) {
+        $foto_perfil = $imagen;
     } else {
-        // Si no hay foto, asignamos la imagen por defecto
-        $_SESSION['foto_perfil'] = 'img/default_profile.jpg';
+        $tipo = detectarFormatoBase64($imagen);
+        $foto_perfil = "data:$tipo;base64,$imagen";
     }
+} else {
+    echo "<pre>No se encontró imagen base64 en la base de datos</pre>";
+}
+
+function detectarFormatoBase64($base64) {
+    $inicio = substr($base64, 0, 4); 
+    
+    if ($inicio === '/9j/') return 'image/jpeg'; 
+    if ($inicio === 'iVBOR') return 'image/png'; 
+    if ($inicio === 'R0lG') return 'image/gif'; 
+    
+    return 'image/jpeg'; 
 }
 
 if (isset($_POST['logout'])) 
@@ -40,19 +56,21 @@ if (isset($_POST['logout']))
     <meta charset="UTF-8">
         <title>TecView</title>
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-        <link rel="stylesheet" href="./css/home.css">
+        <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>
+        <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+        <link rel='stylesheet' href='css/home.css'>
         <link rel="icon" href="./img/logo.ico">
     </head>
     <body>
         <header>
-            <div class="logo">
+            <div class="logo" id="togglePanel">
                 <img src="img/logo.png" alt="Logo">
             </div>
             <h1>Inicio</h1>
             <div class="user-menu" id="userMenu">
                 <span><?php echo htmlspecialchars($_SESSION['user']); ?></span>
                 <div class="profile-icon">
-                    <img id="profileImage" src="<?php echo $_SESSION['foto_perfil']; ?>" alt="Perfil">
+                    <img id="profileImage" src="<?php echo htmlspecialchars($foto_perfil); ?>" class="rounded-circle" alt="Perfil" width="45" height="45">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <a href="perfil.php">Perfil</a>
@@ -62,8 +80,27 @@ if (isset($_POST['logout']))
                 </div>
             </div>
         </header>
+        <aside id="sidePanel" class="side-panel">
+            <h3>Opciones</h3>
+
+        <!-- Switch de modo oscuro -->
+        <div class="dark-mode-container">
+            <label class="theme-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <div class="slider round"></div>
+            </label>
+            <span>Modo Oscuro</span>
+        </div>
+
+        <h3>Filtrar publicaciones</h3>
+        <select id="filterPosts">
+            <option value="recientes">Recientes</option>
+            <option value="populares">Populares</option>
+            <option value="amigos">Amigos</option>
+        </select>
+        </aside>
         <main>
-            <h1>BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
+        <h1 class="welcome-message">BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
         </main>
         <footer>
             <p>© 2021 TecView. Todos los derechos reservados.</p>
@@ -85,5 +122,6 @@ if (isset($_POST['logout']))
                 }
             });
         </script>
+        <script src="./js/home.js"></script>
     </body>
 </html>
