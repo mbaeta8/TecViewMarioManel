@@ -17,8 +17,12 @@ header {
     background-color: #76b852;
     padding: 15px 20px;
     border-bottom: 2px solid black;
-    z-index: 10;
-    position: relative;
+    z-index: 2000; /* ?? Asegura que el header estï¿½ SIEMPRE por encima del panel */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 75px; /* Ajusta la altura del header */
 }
 
 .logo img {
@@ -109,17 +113,20 @@ h1 {
 
 .side-panel {
     position: fixed;
-    top: 0;
-    left: -250px;
+    top: 73px; /* ?? Aseguramos que el panel inicie DESPUï¿½S del header */
+    left: -250px; /* Oculto por defecto */
     width: 250px;
-    height: 100vh;
-    background: #76b852;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    height: calc(100vh - 135px); /* ?? 100vh - (73px header + 45px footer) */
+    background-color: #76b852;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
-    transition: left 0.3s ease;
-    z-index: 5; /* Asegurar que esté por debajo del header */
+    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+    border-top: 2px solid black; /* Lï¿½nea negra arriba */
+    overflow-y: auto; /* ?? Permite scroll interno si el contenido es mayor a la altura */
 }
 
+/* Cuando el panel estï¿½ abierto */
 .side-panel.active {
     left: 0;
 }
@@ -129,7 +136,7 @@ h1 {
     z-index: 11;
 }
 
-/* Ajuste del switch con imágenes */
+/* Ajuste del switch con imï¿½genes */
 .theme-switch {
     display: inline-block;
     height: 34px;
@@ -156,7 +163,7 @@ h1 {
                 inset -2px -2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Botón deslizante */
+/* Botï¿½n deslizante */
 .slider::before {
     content: "";
     background: radial-gradient(circle, #fff 30%, #ddd 70%);
@@ -177,7 +184,7 @@ input:checked + .slider {
                 inset -2px -2px 5px rgba(255, 255, 255, 0.3);
 }
 
-/* Animación del botón */
+/* Animaciï¿½n del botï¿½n */
 input:checked + .slider::before {
     transform: translateX(26px);
     background: radial-gradient(circle, #fff 30%, #bbb 70%);
@@ -202,12 +209,12 @@ input:checked + .slider::after {
 
 /* Modo Oscuro */
 .dark-mode {
-    background-color: #121212;
+    background-color: #4c7f3d !important; /* Verde mï¿½s oscuro */
     color: white;
 }
 
-.dark-mode nav, .dark-mode footer {
-    background: #222;
+.dark-mode header, .dark-mode footer, .dark-mode .side-panel {
+    background-color: #3d6930 !important; /* Oscurecemos el nav y el footer */
 }
 
 .dark-mode .home-content {
@@ -215,16 +222,21 @@ input:checked + .slider::after {
     color: white;
 }
 
-.dark-mode .side-panel {
-    background: #333;
+/*.dark-mode .side-panel {
+    background-color: #3d6930; 
     color: white;
     border-right: 1px solid #444;
-}
+}*/
 
-.dark-mode footer {
+/*.dark-mode footer {
     background: #222;
     color: white;
     border-top: 1px solid #444;
+}*/
+
+.dark-mode .side-panel h3,
+.dark-mode .side-panel button {
+    color: #ddd;
 }
 
 /* Main Content */

@@ -83,7 +83,7 @@ if (isset($_POST['logout']))
         <aside id="sidePanel" class="side-panel">
             <h3>Opciones</h3>
 
-        <!-- Switch de modo oscuro con el diseño de CodePen -->
+        <!-- Switch de modo oscuro -->
         <div class="dark-mode-container">
             <label class="theme-switch">
                 <input type="checkbox" id="darkModeToggle">
