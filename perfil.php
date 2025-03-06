@@ -35,13 +35,13 @@ if (isset($_POST['logout']))
 
 ?>
 <!DOCTYPE html>
-<html lang="es" >
+<html lang="en">
     <head>
-    <meta charset="UTF-8">
+        <meta charset="UTF-8">
         <title>TecView</title>
-        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-        <link rel="stylesheet" href="./css/home.css">
+        <link rel="stylesheet" href="./css/profile.css">
         <link rel="icon" href="./img/logo.ico">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
         <header>
@@ -63,6 +63,14 @@ if (isset($_POST['logout']))
             </div>
         </header>
         <main>
+            <div id="mainBanner">
+                <div id="banner">
+                    <img src="">
+                </div>
+                <div id="profile">
+                    <img id="profileImage" src="<?php echo $_SESSION['foto_perfil']; ?>" alt="Perfil">
+                </div>
+            </div>
             <h1>BIENVENIDO, <?php echo htmlspecialchars($_SESSION['user']); ?>!</h1>
         </main>
         <footer>
