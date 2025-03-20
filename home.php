@@ -13,23 +13,48 @@ $user = $_SESSION['user'];
 $foto_perfil = 'img/default_profile.jpg';
 
   
-$query = "SELECT foto_perfil FROM users WHERE username = :user";
+$query = "SELECT userFirstName, userLastName, foto_perfil, descripcion, edad, ubicacion FROM users WHERE username = :user";
+// $stmt = $conn->prepare($query);
+// $stmt->bindParam(':user', $user);
+// $stmt->execute();
+// $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// if ($row && !empty($row['foto_perfil'])) {
+//     $imagen = $row['foto_perfil'];
+    
+//     if (strpos($imagen, 'data:image') === 0) {
+//         $foto_perfil = $imagen;
+//     } else {
+//         $tipo = detectarFormatoBase64($imagen);
+//         $foto_perfil = "data:$tipo;base64,$imagen";
+//     }
+// } else {
+//     echo "<pre>No se encontró imagen base64 en la base de datos</pre>";
+// }
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':user', $user);
 $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($row && !empty($row['foto_perfil'])) {
-    $imagen = $row['foto_perfil'];
-    
-    if (strpos($imagen, 'data:image') === 0) {
-        $foto_perfil = $imagen;
-    } else {
-        $tipo = detectarFormatoBase64($imagen);
-        $foto_perfil = "data:$tipo;base64,$imagen";
+if ($row) {
+    $_SESSION['userFirstName'] = $row['userFirstName'];
+    $_SESSION['userLastName'] = $row['userLastName'];
+    $_SESSION['descripcion'] = $row['descripcion'];
+    $_SESSION['edad'] = $row['edad'];
+    $_SESSION['ubicacion'] = $row['ubicacion'];
+
+    if (!empty($row['foto_perfil'])) {
+        $imagen = $row['foto_perfil'];
+        
+        if (strpos($imagen, 'data:image') === 0) {
+            $foto_perfil = $imagen;
+        } else {
+            $tipo = detectarFormatoBase64($imagen);
+            $foto_perfil = "data:$tipo;base64,$imagen";
+        }
     }
 } else {
-    echo "<pre>No se encontró imagen base64 en la base de datos</pre>";
+    echo "<pre>No se encontró imagen ni datos del usuario en la base de datos</pre>";
 }
 
 function detectarFormatoBase64($base64) {
@@ -58,8 +83,9 @@ if (isset($_POST['logout']))
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
         <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>
         <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
-        <link rel='stylesheet' href='css/home.css'>
+        <link rel='stylesheet' href='./css/home.css'>
         <link rel="icon" href="./img/logo.ico">
+        <script src="./js/home.js"></script>
     </head>
     <body>
         <header>
@@ -73,12 +99,50 @@ if (isset($_POST['logout']))
                     <img id="profileImage" src="<?php echo htmlspecialchars($foto_perfil); ?>" class="rounded-circle" alt="Perfil" width="45" height="45">
                 </div>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="perfil.php">Perfil</a>
+                    <a onclick=showLoginDialog()>Perfil</a>
                     <form method="post" action="">
                         <button type="submit" name="logout" id="logout">Cerrar Sesión</button>
                     </form>
                 </div>
             </div>
+            <dialog id="login-dialog">
+                <div class="wrapper">
+                    <div id="profile">
+                        <div class="profile-icon-dialog">
+                            <img id="profileImageDialog" src="<?php echo htmlspecialchars($foto_perfil); ?>" class="rounded-circle" alt="Perfil" width="45" height="45">
+                        </div>
+                        <div id="infoProfile">
+                            <div class="form">
+                                <label>Usuari: </label>
+                                <input id="user" type="text" readonly placeholder="nombreUsuario" value="<?php echo htmlspecialchars($_SESSION['user']); ?>">
+                            </div>
+                            <div class="form">
+                                <label>Nombre: </label>
+                                <input id="name" type="text" readonly placeholder="nombre" value="<?php echo htmlspecialchars($_SESSION['userFirstName']); ?>">
+                            </div>
+                            <div class="form">
+                                <label>Apellido: </label>
+                                <input id="surname" type="text" readonly placeholder="apellido" value="<?php echo htmlspecialchars($_SESSION['userLastName']); ?>">
+                            </div>
+                            <div class="form">
+                                <label>Edad: </label>
+                                <input id="age" type="text" readonly placeholder="edad" value="<?php echo htmlspecialchars($_SESSION['edad']); ?>">
+                            </div>
+                            <div class="form" id="descriptionDiv">
+                                <label id="descriptionLabel">Descripción: </label>
+                                <textarea id="description" readonly placeholder="descripcion"><?php echo htmlspecialchars($_SESSION['descripcion']); ?></textarea>
+                            </div>
+                            <div class="form">
+                                <label>Ubicacion: </label>
+                                <input id="location" type="text" readonly placeholder="ubicacion" value="<?php echo htmlspecialchars($_SESSION['ubicacion']); ?>">
+                            </div>
+                        </div>
+                        <div id="profileButton">
+                            <button id="editar" onclick="editMode()">Editar</button>
+                        </div>
+                    </div>
+                </div>
+            </dialog>
         </header>
         <aside id="sidePanel" class="side-panel">
             <h3>Opciones</h3>
@@ -121,7 +185,19 @@ if (isset($_POST['logout']))
                     dropdown.classList.remove("show");
                 }
             });
+
+            const dialog = document.getElementById("login-dialog")
+            const wrapper = document.querySelector(".wrapper")
+
+            function showLoginDialog(){
+                dialog.showModal()
+            }
+
+            dialog.addEventListener("click", (e) => {
+                if (!wrapper.contains(e.target)) {
+                    dialog.close()
+                }
+            })
         </script>
-        <script src="./js/home.js"></script>
     </body>
 </html>

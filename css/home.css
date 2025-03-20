@@ -255,6 +255,147 @@ main {
     color: white;
 }
 
+/*Dialog*/
+
+/* Styles for centering the dialog */
+#login-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #99d17b;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+    max-width: 90%;
+    z-index: 1000;
+}
+
+/* Styling for the wrapper inside the dialog */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    color: white;
+}
+
+/*inputs*/
+.form input[readonly]{
+    background: transparent;
+    border-style: none;
+    color: white;
+}
+
+.form input[readonly]::placeholder {
+    color: white;
+    
+}
+
+.form input[readonly]:focus {
+    outline: none;
+    box-shadow: none;
+    caret-color: transparent;
+}
+
+.form input[readonly]:hover {
+    cursor: default;
+}
+
+/*descripcion*/
+#descriptionDiv {
+    display: flex;
+    flex-direction: row;
+}
+#descriptionLabel {
+    display: flex;
+    align-items: flex-start;
+}
+#descriptionDiv textarea {
+    background: transparent;
+    border-style: none;
+    resize: none;
+    margin-left: 5px;
+    margin-top: 5px;
+    color: white;
+}
+#descriptionDiv textarea[readonly]::placeholder {
+    color: white;
+}
+#descriptionDiv textarea[readonly]:focus {
+    outline: none;
+    box-shadow: none;
+    caret-color: transparent;
+}
+#descriptionDiv textarea[readonly]:hover {
+    cursor: default;
+}
+
+/* Cuando el input o textarea es editable */
+input:not([readonly]), textarea:not([readonly]) {
+    cursor: text; /* Muestra el cursor de texto */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: black !important;
+}
+
+
+/* Profile image styles */
+#profileButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+#editar {
+    height: 2em;
+    width: 4em;
+    margin-left: 2em;
+}
+.profile-icon-dialog img {
+    border-radius: 50%;
+    
+    width: 100px;
+    height: 100px;
+}
+.profile-icon-dialog img:hover {
+    opacity: 50%;
+
+}
+
+.profile-icon-dialog {
+    /*width: 45px;
+    height: 45px;*/
+    border-radius: 50%;
+    overflow: hidden;
+    /*border: 2px solid white;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: gray;
+    margin-bottom: 10px;
+}
+
+/* Styling for the text elements */
+label {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+#profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+#infoProfile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 footer {
     background-color: #76b852;
     padding: 10px;
