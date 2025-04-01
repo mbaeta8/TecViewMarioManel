@@ -13,6 +13,7 @@
         $login = verificarUsuari($credential, $pass);
         if ($login) {
             session_start();
+            $_SESSION['userID'] = $login['idUsuari'];
             $_SESSION['user'] = $credential;
             header('Location: home.php');
             exit();

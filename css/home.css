@@ -8,6 +8,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     background-color: #76b852;
     text-align: center;
+    padding-top: 50px;
 }
 
 header {
@@ -17,12 +18,31 @@ header {
     background-color: #76b852;
     padding: 15px 20px;
     border-bottom: 2px solid black;
-    z-index: 2000; /* ?? Asegura que el header est� SIEMPRE por encima del panel */
+    z-index: 2000; /* ?? Asegura que el header esta SIEMPRE por encima del panel */
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     height: 75px; /* Ajusta la altura del header */
+}
+
+#addPostButton {
+    background-color: #28a745; /* Color verde para el botón */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 30px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 50px;
+}
+
+#addPostButton:hover {
+    background-color: #218838; /* Color verde más oscuro al pasar el mouse */
 }
 
 .logo img {
@@ -52,22 +72,12 @@ h1 {
 }
 
 .profile-icon {
-    /*width: 45px;
-    height: 45px;*/
     border-radius: 50%;
     overflow: hidden;
-    /*border: 2px solid white;*/
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
-/*.profile-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; 
-    object-position: center;
-}*/
 
 .user-menu:hover .profile-icon img, .user-menu:hover span {
     transform: scale(0.9);
@@ -113,7 +123,7 @@ h1 {
 
 .side-panel {
     position: fixed;
-    top: 73px; /* ?? Aseguramos que el panel inicie DESPU�S del header */
+    top: 73px; /* ?? Aseguramos que el panel inicie DESPUES del header */
     left: -250px; /* Oculto por defecto */
     width: 250px;
     height: calc(100vh - 135px); /* ?? 100vh - (73px header + 45px footer) */
@@ -122,11 +132,11 @@ h1 {
     padding: 20px;
     transition: left 0.3s ease-in-out;
     z-index: 1000;
-    border-top: 2px solid black; /* L�nea negra arriba */
+    border-top: 2px solid black; /* Linea negra arriba */
     overflow-y: auto; /* ?? Permite scroll interno si el contenido es mayor a la altura */
 }
 
-/* Cuando el panel est� abierto */
+/* Cuando el panel esta abierto */
 .side-panel.active {
     left: 0;
 }
@@ -136,7 +146,7 @@ h1 {
     z-index: 11;
 }
 
-/* Ajuste del switch con im�genes */
+/* Ajuste del switch con imagenes */
 .theme-switch {
     display: inline-block;
     height: 34px;
@@ -163,7 +173,7 @@ h1 {
                 inset -2px -2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Bot�n deslizante */
+/* Boton deslizante */
 .slider::before {
     content: "";
     background: radial-gradient(circle, #fff 30%, #ddd 70%);
@@ -184,7 +194,7 @@ input:checked + .slider {
                 inset -2px -2px 5px rgba(255, 255, 255, 0.3);
 }
 
-/* Animaci�n del bot�n */
+/* Animacion del boton */
 input:checked + .slider::before {
     transform: translateX(26px);
     background: radial-gradient(circle, #fff 30%, #bbb 70%);
@@ -192,7 +202,7 @@ input:checked + .slider::before {
 
 /* Iconos de sol y luna */
 .slider::after {
-    content: "??"; /* Sol en modo claro */
+    content: "☀"; /* Sol en modo claro */
     position: absolute;
     top: 50%;
     left: 8px;
@@ -202,10 +212,14 @@ input:checked + .slider::before {
 }
 
 input:checked + .slider::after {
-    content: "??"; /* Luna en modo oscuro */
-    left: 36px;
+    content: "🌙"; /* Luna en modo oscuro */
+    left: 34px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    transition: 0.4s;
 }
-
 
 /* Modo Oscuro */
 .dark-mode {
@@ -222,17 +236,14 @@ input:checked + .slider::after {
     color: white;
 }
 
-/*.dark-mode .side-panel {
-    background-color: #3d6930; 
-    color: white;
-    border-right: 1px solid #444;
-}*/
+.dark-mode .dropdown-menu {
+    background-color: #3d6930 !important;
+}
 
-/*.dark-mode footer {
-    background: #222;
+.dark-mode .wrapper, .dark-mode #login-dialog {
+    background-color: #3d6930 !important;
     color: white;
-    border-top: 1px solid #444;
-}*/
+}
 
 .dark-mode .side-panel h3,
 .dark-mode .side-panel button {
@@ -245,14 +256,210 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 120px);
-    padding: 20px;
-    transition: margin-left 0.3s ease-in-out;
+    height: calc(100vh - 75px - 50px);
+    padding-top: 74px;
+    overflow-y: auto;
 }
 
-.welcome-message {
-    font-size: 2rem;
+/* Contenedor de publicaciones */
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px; /* Limitar el ancho para que las publicaciones no sean muy grandes */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Cada publicación */
+.post {
+    max-width: 1000px; /* Aumenta el ancho de las publicaciones */
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* Cambiar la sombra cuando se pasa el cursor sobre la publicaci�n */
+.post:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Centrar los medios dentro de la publicaci�n */
+.post img, .post video, .post .gif {
+    width: 100%; /* Hace que el contenido multimedia ocupe todo el ancho de la publicaci�n */
+    max-width: 60%;
+    object-fit: cover; /* Mantiene la proporci�n de la imagen o video */
+}
+
+/* Opcional: Ajustes para hacer que la publicaci�n se vea m�s moderna */
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px; /* Espacio entre la foto de usuario y el nombre */
+}
+
+.post-header img {
+    width: 40px; /* Aumenta el tamaño de la foto de usuario */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-header h2 {
+    font-size: 22px; /* Aumenta el tamaño del nombre de usuario */
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+/* Centrar los medios dentro de la publicación */
+.post img, .post video, .post .gif {
+    max-width: 100%; /* Hace que el contenido multimedia ocupe todo el ancho de la publicación */
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    max-height: 350px; /* Asegura que no sea demasiado alto */
+}
+
+.post-description {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.5;
+    margin: 20px 0; /* Añade espacio entre la descripción y los botones */
+    word-wrap: break-word;
+}
+
+/* Botones de interacción */
+.post-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+/* Estilo para los botones */
+.like-btn, .dislike-btn, .comment-btn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.like-btn:hover {
+    background-color: #4CAF50; /* Verde para el like */
     color: white;
+}
+
+.dislike-btn:hover {
+    background-color: #FF5733; /* Rojo para el dislike */
+    color: white;
+}
+
+.comment-btn:hover {
+    background-color: #007BFF; /* Azul para comentarios */
+    color: white;
+}
+
+/* Estilo para la zona de comentarios */
+.comment-section {
+    margin-top: 20px;
+    cursor: pointer;
+    color: #76b852;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Modal para comentarios */
+.comment-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    min-width: 400px;
+    max-width: 60%;
+    max-height: 80vh;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.comment-modal.show {
+    display: block;
+}
+
+.comment-section {
+    margin-top: 20px;
+    cursor: pointer;
+    color: #76b852;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.comment-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.comment-list li span {
+    font-weight: bold;
+    color: #333;
+}
+
+.comment-list li small {
+    color: #666;
+    margin-left: 10px;
+}
+
+.comment-modal textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+}
+
+.comment-modal .close-modal {
+    background-color: #e60000;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.comment-modal .close-modal:hover {
+    background-color: #cc0000;
+}
+
+/* Mostrar el modal */
+.comment-modal.show {
+    display: block;
 }
 
 /*Dialog*/
@@ -279,19 +486,18 @@ main {
     align-items: center;
     text-align: center;
     justify-content: center;
-    color: white;
+    color: black;
 }
 
 /*inputs*/
 .form input[readonly]{
     background: transparent;
     border-style: none;
-    color: white;
+    color: black;
 }
 
 .form input[readonly]::placeholder {
     color: white;
-    
 }
 
 .form input[readonly]:focus {
@@ -322,7 +528,7 @@ main {
     color: white;
 }
 #descriptionDiv textarea[readonly]::placeholder {
-    color: white;
+    color: black;
 }
 #descriptionDiv textarea[readonly]:focus {
     outline: none;
