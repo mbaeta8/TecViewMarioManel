@@ -1,0 +1,36 @@
+Array
+(
+    [video] => Array
+        (
+            [name] => c5754c96ab14f879867d44f89ffc1baf.mp4
+            [full_path] => c5754c96ab14f879867d44f89ffc1baf.mp4
+            [type] => video/mp4
+            [tmp_name] => D:\xampp\tmp\php96F.tmp
+            [error] => 0
+            [size] => 1162150
+        )
+
+)
+Array
+(
+    [description] => Prueba
+    [mediaType] => video
+)
+Array
+(
+    [video] => Array
+        (
+            [name] => c5754c96ab14f879867d44f89ffc1baf.mp4
+            [full_path] => c5754c96ab14f879867d44f89ffc1baf.mp4
+            [type] => video/mp4
+            [tmp_name] => D:\xampp\tmp\php261B.tmp
+            [error] => 0
+            [size] => 1162150
+        )
+
+)
+Array
+(
+    [description] => Prueba
+    [mediaType] => video
+)

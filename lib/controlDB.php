@@ -30,10 +30,11 @@
                 $dadesUsuari = $usuaris->fetch(PDO::FETCH_ASSOC);
             
                 if (password_verify($pass, $dadesUsuari['passHash'])) {
-                    $result = ['idUsuari' => $dadesUsuari['iduser'], 'name' => $dadesUsuari['username']];
-                    return true;
+                    return [
+                        'iduser' => $dadesUsuari['iduser'],
+                        'username' => $dadesUsuari['username']
+                    ];
                 }
-                //echo "<p style=\"color:red;\">Error " . "PSSWD and HASH do not match" . "</p>";
             }
         } catch (PDOException $e) {
             echo "<p style=\"color:red;\">Error " . $e->getMessage() . "</p>";
