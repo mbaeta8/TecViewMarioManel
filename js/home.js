@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Crear publicación
     createPostForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        const description = document.getElementById("description").value.trim();
+        const description = document.getElementById("postDescription").value.trim();
         const mediaType = mediaTypeSelect.value;
         const image = document.getElementById("image").files[0];
         const video = document.getElementById("video").files[0];
@@ -382,19 +382,30 @@ document.addEventListener("DOMContentLoaded", function () {
 // Manejador de eventos para los botones de Like y Dislike
 document.addEventListener("click", function (event) {
     if (event.target.classList.contains("like-btn") || event.target.classList.contains("dislike-btn")) {
-        const postID = event.target.getAttribute("data-id");
+        const postID = event.target.getAttribute("data-post-id");  // Cambiado de "data-id" a "data-post-id"
         const isLike = event.target.classList.contains("like-btn"); // true si es like, false si es dislike
-        
-        fetch('./lib/update_likes.php', {
+                
+        // Verificar que se esté enviando correctamente
+        console.log("postID:", postID, "isLike:", isLike);
+
+        fetch('../lib/update_likes_dislike.php', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ postID, isLike })
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                document.querySelector(`.like-btn[data-id="${postID}"] span`).innerText = data.likes;
-                document.querySelector(`.dislike-btn[data-id="${postID}"] span`).innerText = data.dislikes;
+            console.log("Respuesta del servidor:", data);  // Ver qué recibimos
+            try {
+                let jsonData = JSON.parse(data);
+                if (jsonData.success) {
+                    document.querySelector(`.like-btn[data-post-id="${postID}"] span`).innerText = jsonData.likes;
+                    document.querySelector(`.dislike-btn[data-post-id="${postID}"] span`).innerText = jsonData.dislikes;
+                } else {
+                    alert(jsonData.message);
+                }
+            } catch (error) {
+                console.error("Error al analizar la respuesta:", error);
             }
         })
         .catch(error => console.error("Error:", error));

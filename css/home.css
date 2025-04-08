@@ -256,6 +256,11 @@ input:checked + .slider::after {
     color: #ddd;
 }
 
+/* Cambiar el color del texto de la descripcion */
+.dark-mode .post-content {
+    color: black;
+}
+
 /*Dialog*/
 
 /* Styles for centering the dialog */
@@ -376,26 +381,28 @@ main {
     display: flex;
     justify-content: center;
     align-items: flex-start; /* Evita que se centre verticalmente */
-    min-height: 100vh; /* Asegura que ocupe toda la pantalla */
-    padding-top: 90px; /* Espacio para el header */
-    padding-bottom: 70px; /* Espacio para el footer */
+    padding-top: 20px; /* Espacio para el header */
+    padding-bottom: 60px; /* Espacio para el footer */
     overflow-y: auto;
+    flex-grow: 1;
 }
 
 /* Contenedor de publicaciones */
 .posts-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     width: 100%;
     max-width: 1000px; /* Limitar el ancho para que las publicaciones no sean muy grandes */
     padding: 20px;
     box-sizing: border-box;
+    gap: 20px; /* Espacio entre publicaciones */
 }
 
 /* Cada publicación */
 .post {
+    position: relative;
     max-width: 1000px; /* Aumenta el ancho de las publicaciones */
     width: 100%;
     margin: 20px auto;
@@ -406,7 +413,10 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    text-align: left;
     gap: 10px;
+    overflow: hidden; /* Evita que el contenido se desborde */
+    clear: both; /* Limpia cualquier flotante y asegura el buen flujo del layout */
 }
 
 /* Cambiar la sombra cuando se pasa el cursor sobre la publicaci�n */
@@ -416,30 +426,54 @@ main {
 
 /* Centrar los medios dentro de la publicaci�n */
 .post img, .post video, .post .gif {
-    width: 100%; /* Hace que el contenido multimedia ocupe todo el ancho de la publicaci�n */
-    max-width: 60%;
-    object-fit: cover; /* Mantiene la proporci�n de la imagen o video */
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 10px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    object-fit: contain;
+}
+
+.post-content {
+    width: 100%;
+    display: block;
+    overflow: hidden; /* Evita que el contenido se desborde */
 }
 
 /* Opcional: Ajustes para hacer que la publicaci�n se vea m�s moderna */
 .post-header {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 10px; /* Espacio entre la foto de usuario y el nombre */
 }
 
-.post-header img {
-    width: 40px; /* Aumenta el tamaño de la foto de usuario */
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
+.userinfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.post-header h2 {
-    font-size: 22px; /* Aumenta el tamaño del nombre de usuario */
+.post-header .profile-pic {
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    margin: 0;
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 10px;
+}
+
+.post-header .name-user {
     font-weight: bold;
     color: #333;
-    margin: 0;
+}
+
+.post-header .post-date {
+    font-size: 12px;
+    color: #333;
 }
 
 /* Centrar los medios dentro de la publicación */
@@ -460,39 +494,48 @@ main {
 }
 
 /* Botones de interacción */
-.post-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 10px; /* Espacio entre botones */
-    flex-wrap: wrap; /* Por si no cabe todo en una l�nea */
+/* Estilo para contenedor de botones en posts (ya sea generado en JS o PHP) */
+.post-buttons,
+.post-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-/* Estilo para los botones */
-.like-btn, .dislike-btn, .comment-btn {
+/* Botones individuales */
+.post-buttons button,
+.post-actions button {
     background-color: #f0f0f0;
     border: none;
     padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    transition: all 0.3s ease;
     display: flex;
     align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease;
 }
 
-.like-btn:hover {
-    background-color: #4CAF50; /* Verde para el like */
+/* Efectos al pasar el mouse */
+.post-buttons .like-btn:hover,
+.post-actions .like-btn:hover {
+    background-color: #4CAF50;
     color: white;
 }
 
-.dislike-btn:hover {
-    background-color: #FF5733; /* Rojo para el dislike */
+.post-buttons .dislike-btn:hover,
+.post-actions .dislike-btn:hover {
+    background-color: #FF5733;
     color: white;
 }
 
-.comment-btn:hover {
-    background-color: #007BFF; /* Azul para comentarios */
+.post-buttons .comment-btn:hover,
+.post-actions .comment-btn:hover {
+    background-color: #007BFF;
     color: white;
 }
 
@@ -628,4 +671,5 @@ footer {
     width: 100%;
     border-top: 2px solid black;
     color: white;
+    z-index: 2000;
 }

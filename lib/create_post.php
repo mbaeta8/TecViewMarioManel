@@ -6,7 +6,6 @@ header('Content-Type: application/json'); // Asegura que la respuesta será en fo
 // Incluir la conexión a la base de datos
 require_once  './controlDB.php';
 
-
 if (!isset($_SESSION['userID'])) {
     echo json_encode(['success' => false, 'message' => 'Usuario no autenticado']);
     exit;

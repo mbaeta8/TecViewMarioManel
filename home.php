@@ -14,23 +14,7 @@ $foto_perfil = 'img/default_profile.jpg';
 
   
 $query = "SELECT userFirstName, userLastName, foto_perfil, descripcion, edad, ubicacion FROM users WHERE username = :user";
-// $stmt = $conn->prepare($query);
-// $stmt->bindParam(':user', $user);
-// $stmt->execute();
-// $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// if ($row && !empty($row['foto_perfil'])) {
-//     $imagen = $row['foto_perfil'];
-    
-//     if (strpos($imagen, 'data:image') === 0) {
-//         $foto_perfil = $imagen;
-//     } else {
-//         $tipo = detectarFormatoBase64($imagen);
-//         $foto_perfil = "data:$tipo;base64,$imagen";
-//     }
-// } else {
-//     echo "<pre>No se encontró imagen base64 en la base de datos</pre>";
-// }
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':user', $user);
 $stmt->execute();
@@ -75,7 +59,7 @@ if (isset($_POST['logout']))
 }
 
 // Consulta mejorada para obtener posts con conteo de likes y dislikes
-$queryPosts = "SELECT posts.*, users.username, users.foto_perfil, 
+$queryPosts = "SELECT posts.*, users.username, users.foto_perfil, posts.createdAT, 
                (SELECT COUNT(*) FROM likes WHERE postID = posts.idPost) AS total_likes, 
                (SELECT COUNT(*) FROM dislikes WHERE postID = posts.idPost) AS total_dislikes
                FROM posts 
@@ -278,14 +262,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['description'])) {
         </div>
         </aside>
         <main>
-            <!-- Publicaciones -->
-        <div class="container">
+        <!-- Publicaciones -->
+        <div class="posts-container">
             <?php foreach ($posts as $post): ?>
                 <div class="post">
                     <!-- Cabecera de la publicación -->
                     <div class="post-header">
-                        <img src="<?php echo htmlspecialchars($post['foto_perfil']); ?>" class="rounded-circle" width="40" height="40">
-                        <span><?php echo htmlspecialchars($post['username']); ?></span>
+                        <img src="<?php echo htmlspecialchars($post['foto_perfil']); ?>" class="profile-pic">
+                        <div class="userinfo">
+                            <span class="name-user"><?php echo htmlspecialchars($post['username']); ?></span>
+                            <span class="post-date"><?php echo htmlspecialchars($post['createdAT']); ?></span>
+                        </div>
                     </div>
                     <!-- Contenido de la publicación -->
                     <div class="post-content">
@@ -315,7 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['description'])) {
                     </div>
                     <!-- Modal de comentarios -->
                     <div class="modal fade" id="commentsModal-<?php echo $post['idPost']; ?>" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">  <!-- Añadimos modal-dialog-centered -->
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="commentsModalLabel">Comentarios</h5>
@@ -333,8 +320,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['description'])) {
                             </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            </div>
+                </div>
+            <?php endforeach; ?>
         </main>
         <footer>
             <p>© 2025 TecView. Todos los derechos reservados.</p>
@@ -349,7 +336,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['description'])) {
                     const result = JSON.parse(response);
                     if (result.success) {
                         const commentsDiv = document.getElementById(`comments-${postID}`);
-                        commentsDiv.innerHTML += `<div class="comment-item"><strong>${result.username}:</strong> ${result.comment}</div>`;
+                        // Añadir la fecha al comentario en el HTML
+                        const formattedDate = result.date; // Asegúrate de que la fecha esté incluida en la respuesta del servidor
+                        commentsDiv.innerHTML += `
+                            <div class="comment-item">
+                                <strong>${formattedDate} - ${result.username}:</strong> ${result.comment}
+                            </div>
+                        `;
                         document.getElementById(`newComment-${postID}`).value = '';  // Limpiar el campo de texto
                     } else {
                         alert('Error al enviar comentario.');
@@ -401,13 +394,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['description'])) {
                 $(".like-btn").click(function() {
                     let postID = $(this).data("post-id");
                     let likeBtn = $(this);
-                
-                    $.post("like.php", { postID: postID }, function(response) {
-                        let result = JSON.parse(response);
-                        if (result.success) {
-                            likeBtn.find(".like-count").text(result.likes);
-                        } else {
-                            alert(result.message);
+                    
+                    $.ajax({
+                        url: "/IsitecMarioManel/lib/update_likes_dislike.php",  // Usamos la ruta completa
+                        method: "POST",
+                        contentType: "application/json",  // Esto asegura que los datos se envían como JSON
+                        data: JSON.stringify({ postID: postID, isLike: true }),  // Convierte el objeto a JSON
+                        success: function(response) {
+                            let result = JSON.parse(response);
+                            if (result.success) {
+                                // Actualiza el conteo de likes en el botón
+                                likeBtn.find(".like-count").text(result.likes);
+
+                                // Actualizar el contador de dislikes si es necesario
+                                let dislikeBtn = $(".dislike-btn[data-post-id='" + postID + "']");
+                                if (dislikeBtn.length) {
+                                    dislikeBtn.find(".dislike-count").text(result.dislikes);
+                                }
+                            } else {
+                                alert(result.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert("Error en la solicitud: " + error);
                         }
                     });
                 });
@@ -415,18 +424,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['description'])) {
                 $(".dislike-btn").click(function() {
                     let postID = $(this).data("post-id");
                     let dislikeBtn = $(this);
-                
-                    $.post("dislike.php", { postID: postID }, function(response) {
-                        let result = JSON.parse(response);
-                        if (result.success) {
-                            dislikeBtn.find(".dislike-count").text(result.dislikes);
-                        } else {
-                            alert(result.message);
+                    
+                    $.ajax({
+                        url: "/IsitecMarioManel/lib/update_likes_dislike.php",  // Usamos la ruta completa
+                        method: "POST",
+                        contentType: "application/json",  // Esto asegura que los datos se envían como JSON
+                        data: JSON.stringify({ postID: postID, isLike: false }),  // Convierte el objeto a JSON
+                        success: function(response) {
+                            let result = JSON.parse(response);
+                            if (result.success) {
+                                // Actualiza el conteo de dislikes en el botón
+                                dislikeBtn.find(".dislike-count").text(result.dislikes);
+                            
+                                // Actualizar el contador de likes si es necesario
+                                let likeBtn = $(".like-btn[data-post-id='" + postID + "']");
+                                if (likeBtn.length) {
+                                    likeBtn.find(".like-count").text(result.likes);
+                                }
+                            } else {
+                                alert(result.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert("Error en la solicitud: " + error);
                         }
                     });
                 });
             });
 
+            // Mostrar/ocultar campos según el tipo de medio seleccionado
             $('#createPostModal').on('hidden.bs.modal', function () {
                 $('#createPostForm')[0].reset();
                 $('#imageField').hide();
